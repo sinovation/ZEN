@@ -2,36 +2,35 @@
 
 ## Introduction
 
-ZEN, a BERT-based Chinese **(Z)** text encoder **E**nhanced by **N**-gram representations, where different combinations of characters are considered during training. The potential word or phrase boundaries are explicitly pre-trained and fine-tuned with the character encoder (BERT). Therefore ZEN incorporates the comprehensive information of both the character sequence and words or phrases it contains. Experimental results illustrated the effectiveness of ZEN on a series of Chinese NLP tasks. We show that ZEN, using less resource than other published encoders, can achieve state-of-the-art performance on most tasks.
+ZEN, a BERT-based Chinese **(Z)** text encoder **E**nhanced by **N**-gram representations, where different combinations of characters are considered during training. The potential word or phrase boundaries are explicitly pre-trained and fine-tuned with the character encoder (BERT). ZEN incorporates the comprehensive information of both the character sequence and words or phrases it contains. ZEN is tested on a series of Chinese NLP tasks, where it requires less resource than other published encoders, and achieves state-of-the-art performance on most tasks.
 
+## Quick tour of pre-training and fine-tune using ZEN
 
-## Quick tour of the pretraining and fine-tuning usage scripts
+The library comprises several example scripts for conducting Chinese NLP tasks:
 
-The library comprises several example scripts with SOTA performances for NLP tasks on chinese corpus:
-
-- `run_pretrain.py`: an example pretraining ZEN
+- `run_pre_train.py`: an example pre-training ZEN
 - `run_sequence_level_classification.py`: an example fine-tuning ZEN on DC, SA, SPM and NLI tasks (*sequence-level classification*)
 - `run_token_level_classification.py`: an example fine-tuning ZEN on CWS, POS and NER tasks (*token-level classification*)
 
-Here are three quick usage examples for these scripts:
+Three quick usage examples for these scripts:
 
-### `run_pretrain.py`: Pretrain ZEN model from scratch or bert model
+### `run_pre_train.py`: Pre-train ZEN model from scratch or BERT model
 
 ```shell
-python run_pretrain.py  \
+python run_pre_train.py  \
     --pregenerated_data /path/to/pregenerated_data   \
     --bert_model /path/to/bert_model  \
     --do_lower_case  \
-    --output_dir /home/baijiaxin/output/mk1_medium_32543   \
+    --output_dir /path/to/output_dir   \
     --epochs 20  \
     --train_batch_size 128   \
     --reduce_memory  \
     --fp16  \
     --scratch  \
-    --save_name zen_chinese_model_
+    --save_name ZEN_pretrain_base_
 ```
 
-### `run_sequence_level_classification.py`: Fine-tuning on tasks for sequence classification
+### `run_sequence_level_classification.py`: Fine-tune on tasks for sequence classification
 
 ```shell
 python run_sequence_level_classification.py \
@@ -109,7 +108,7 @@ python run_sequence_level_classification.py \
 ```
 
 
-### `run_token_level_classification.py`: Fine-tuning on tasks for sequence classification
+### `run_token_level_classification.py`: Fine-tune on tasks for sequence classification
 
 ```shell
 python run_token_level_classification.py \
@@ -179,7 +178,7 @@ python run_token_level_classification.py \
     --warmup_proportion 0.1
 ```
 
-## Datasets
+## Datasets used in our experiments
 
 
 ### Chinese word segmentation (CWS):
