@@ -12,6 +12,9 @@ The library comprises several example scripts for conducting Chinese NLP tasks:
 - `run_sequence_level_classification.py`: an example fine-tuning ZEN on DC, SA, SPM and NLI tasks (*sequence-level classification*)
 - `run_token_level_classification.py`: an example fine-tuning ZEN on CWS, POS and NER tasks (*token-level classification*)
 
+*(Abbreviations for the tasks are explained in the Task and data section)*
+
+
 Three quick usage examples for these scripts:
 
 ### `run_pre_train.py`: Pre-train ZEN model from scratch or BERT model
@@ -178,7 +181,7 @@ python run_token_level_classification.py \
     --warmup_proportion 0.1
 ```
 
-## Datasets used in our experiments
+## Tasks and datasets used in our experiments
 
 
 ### Chinese word segmentation (CWS):
