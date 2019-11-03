@@ -1,8 +1,14 @@
-"""
-Utilities for working with the local dataset cache.
-This file is adapted from the AllenNLP library at https://github.com/allenai/allennlp
-Copyright by the AllenNLP authors.
-"""
+# This file is derived from the code at
+# https://github.com/huggingface/transformers/blob/master/transformers/file_utils.py
+# and the code at
+# https://github.com/allenai/allennlp/blob/master/allennlp/common/file_utils.py.
+#
+# Original copyright notice:
+#
+# This file is adapted from the AllenNLP library at https://github.com/allenai/allennlp
+# Copyright by the AllenNLP authors.
+"""Utilities for working with the local dataset cache."""
+
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 
 import sys
