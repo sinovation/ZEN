@@ -841,7 +841,7 @@ class ZenPreTrainedModel(nn.Module):
 
 
 class ZenModel(ZenPreTrainedModel):
-    """BERT model ("Bidirectional Embedding Representations from a Transformer").
+    """ZEN model ("BERT-based Chinese (Z) text encoder Enhanced by N-gram representations").
 
     Params:
         `config`: a BertConfig class instance with the configuration to build a new model
@@ -851,8 +851,7 @@ class ZenModel(ZenPreTrainedModel):
 
     Inputs:
         `input_ids`: a torch.LongTensor of shape [batch_size, sequence_length]
-            with the word token indices in the vocabulary(see the tokens preprocessing logic in the scripts
-            `extract_features.py`, `run_classifier.py` and `run_squad.py`)
+            with the word token indices in the vocabulary
         `token_type_ids`: an optional torch.LongTensor of shape [batch_size, sequence_length] with the token
             types indices selected in [0, 1]. Type 0 corresponds to a `sentence A` and type 1 corresponds to
             a `sentence B` token (see BERT paper for more details).
@@ -863,6 +862,10 @@ class ZenModel(ZenPreTrainedModel):
         `output_all_encoded_layers`: boolean which controls the content of the `encoded_layers` output as described below. Default: `True`.
         `head_mask`: an optional torch.Tensor of shape [num_heads] or [num_layers, num_heads] with indices between 0 and 1.
             It's a mask to be used to nullify some heads of the transformer. 1.0 => head is fully masked, 0.0 => head is not masked.
+        `input_ngram_ids`: input_ids of ngrams.
+        `ngram_token_type_ids`: token_type_ids of ngrams.
+        `ngram_attention_mask`: attention_mask of ngrams.
+        `ngram_position_matrix`: position matrix of ngrams.
 
 
     Outputs: Tuple of (encoded_layers, pooled_output)
@@ -876,19 +879,6 @@ class ZenModel(ZenPreTrainedModel):
             classifier pretrained on top of the hidden state associated to the first character of the
             input (`CLS`) to train on the Next-Sentence task (see BERT's paper).
 
-    Example usage:
-    ```python
-    # Already been converted into WordPiece token ids
-    input_ids = torch.LongTensor([[31, 51, 99], [15, 5, 0]])
-    input_mask = torch.LongTensor([[1, 1, 1], [1, 1, 0]])
-    token_type_ids = torch.LongTensor([[0, 0, 1], [0, 1, 0]])
-
-    config = modeling.BertConfig(vocab_size_or_config_json_file=32000, hidden_size=768,
-        num_hidden_layers=12, num_attention_heads=12, intermediate_size=3072)
-
-    model = modeling.BertModel(config=config)
-    all_encoder_layers, pooled_output = model(input_ids, token_type_ids, input_mask)
-    ```
     """
 
     def __init__(self, config, output_attentions=False, keep_multihead_output=False):
@@ -991,8 +981,8 @@ class ZenModel(ZenPreTrainedModel):
 
 
 class ZenForPreTraining(ZenPreTrainedModel):
-    """BERT model with pre-training heads.
-    This module comprises the BERT model followed by the two pre-training heads:
+    """ZEN model with pre-training heads.
+    This module comprises the ZEN model followed by the two pre-training heads:
         - the masked language modeling head, and
         - the next sentence classification head.
 
@@ -1004,8 +994,7 @@ class ZenForPreTraining(ZenPreTrainedModel):
 
     Inputs:
         `input_ids`: a torch.LongTensor of shape [batch_size, sequence_length]
-            with the word token indices in the vocabulary(see the tokens preprocessing logic in the scripts
-            `extract_features.py`, `run_classifier.py` and `run_squad.py`)
+            with the word token indices in the vocabulary
         `token_type_ids`: an optional torch.LongTensor of shape [batch_size, sequence_length] with the token
             types indices selected in [0, 1]. Type 0 corresponds to a `sentence A` and type 1 corresponds to
             a `sentence B` token (see BERT paper for more details).
@@ -1021,6 +1010,10 @@ class ZenForPreTraining(ZenPreTrainedModel):
             0 => next sentence is the continuation, 1 => next sentence is a random sentence.
         `head_mask`: an optional torch.Tensor of shape [num_heads] or [num_layers, num_heads] with indices between 0 and 1.
             It's a mask to be used to nullify some heads of the transformer. 1.0 => head is fully masked, 0.0 => head is not masked.
+        `input_ngram_ids`: input_ids of ngrams.
+        `ngram_token_type_ids`: token_type_ids of ngrams.
+        `ngram_attention_mask`: attention_mask of ngrams.
+        `ngram_position_matrix`: position matrix of ngrams.
 
     Outputs:
         if `masked_lm_labels` and `next_sentence_label` are not `None`:
@@ -1031,19 +1024,6 @@ class ZenForPreTraining(ZenPreTrainedModel):
             - the masked language modeling logits of shape [batch_size, sequence_length, vocab_size], and
             - the next sentence classification logits of shape [batch_size, 2].
 
-    Example usage:
-    ```python
-    # Already been converted into WordPiece token ids
-    input_ids = torch.LongTensor([[31, 51, 99], [15, 5, 0]])
-    input_mask = torch.LongTensor([[1, 1, 1], [1, 1, 0]])
-    token_type_ids = torch.LongTensor([[0, 0, 1], [0, 1, 0]])
-
-    config = BertConfig(vocab_size_or_config_json_file=32000, hidden_size=768,
-        num_hidden_layers=12, num_attention_heads=12, intermediate_size=3072)
-
-    model = BertForPreTraining(config)
-    masked_lm_logits_scores, seq_relationship_logits = model(input_ids, token_type_ids, input_mask)
-    ```
     """
 
     def __init__(self, config, output_attentions=False, keep_multihead_output=False):
@@ -1086,8 +1066,8 @@ class ZenForPreTraining(ZenPreTrainedModel):
 
 
 class ZenForMaskedLM(ZenPreTrainedModel):
-    """BERT model with the masked language modeling head.
-    This module comprises the BERT model followed by the masked language modeling head.
+    """ZEN model with the masked language modeling head.
+    This module comprises the ZEN model followed by the masked language modeling head.
 
     Params:
         `config`: a BertConfig class instance with the configuration to build a new model
@@ -1097,8 +1077,7 @@ class ZenForMaskedLM(ZenPreTrainedModel):
 
     Inputs:
         `input_ids`: a torch.LongTensor of shape [batch_size, sequence_length]
-            with the word token indices in the vocabulary(see the tokens preprocessing logic in the scripts
-            `extract_features.py`, `run_classifier.py` and `run_squad.py`)
+            with the word token indices in the vocabulary
         `token_type_ids`: an optional torch.LongTensor of shape [batch_size, sequence_length] with the token
             types indices selected in [0, 1]. Type 0 corresponds to a `sentence A` and type 1 corresponds to
             a `sentence B` token (see BERT paper for more details).
@@ -1115,6 +1094,10 @@ class ZenForMaskedLM(ZenPreTrainedModel):
             a batch has varying length sentences.
         `head_mask`: an optional torch.Tensor of shape [num_heads] or [num_layers, num_heads] with indices between 0 and 1.
             It's a mask to be used to nullify some heads of the transformer. 1.0 => head is fully masked, 0.0 => head is not masked.
+        `input_ngram_ids`: input_ids of ngrams.
+        `ngram_token_type_ids`: token_type_ids of ngrams.
+        `ngram_attention_mask`: attention_mask of ngrams.
+        `ngram_position_matrix`: position matrix of ngrams.
 
     Outputs:
         if `masked_lm_labels` is  not `None`:
@@ -1122,19 +1105,6 @@ class ZenForMaskedLM(ZenPreTrainedModel):
         if `masked_lm_labels` is `None`:
             Outputs the masked language modeling logits of shape [batch_size, sequence_length, vocab_size].
 
-    Example usage:
-    ```python
-    # Already been converted into WordPiece token ids
-    input_ids = torch.LongTensor([[31, 51, 99], [15, 5, 0]])
-    input_mask = torch.LongTensor([[1, 1, 1], [1, 1, 0]])
-    token_type_ids = torch.LongTensor([[0, 0, 1], [0, 1, 0]])
-
-    config = BertConfig(vocab_size_or_config_json_file=32000, hidden_size=768,
-        num_hidden_layers=12, num_attention_heads=12, intermediate_size=3072)
-
-    model = BertForMaskedLM(config)
-    masked_lm_logits_scores = model(input_ids, token_type_ids, input_mask)
-    ```
     """
 
     def __init__(self, config, output_attentions=False, keep_multihead_output=False):
@@ -1165,8 +1135,8 @@ class ZenForMaskedLM(ZenPreTrainedModel):
 
 
 class ZenForNextSentencePrediction(ZenPreTrainedModel):
-    """BERT model with next sentence prediction head.
-    This module comprises the BERT model followed by the next sentence classification head.
+    """ZEN model with next sentence prediction head.
+    This module comprises the ZEN model followed by the next sentence classification head.
 
     Params:
         `config`: a BertConfig class instance with the configuration to build a new model
@@ -1176,8 +1146,7 @@ class ZenForNextSentencePrediction(ZenPreTrainedModel):
 
     Inputs:
         `input_ids`: a torch.LongTensor of shape [batch_size, sequence_length]
-            with the word token indices in the vocabulary(see the tokens preprocessing logic in the scripts
-            `extract_features.py`, `run_classifier.py` and `run_squad.py`)
+            with the word token indices in the vocabulary
         `token_type_ids`: an optional torch.LongTensor of shape [batch_size, sequence_length] with the token
             types indices selected in [0, 1]. Type 0 corresponds to a `sentence A` and type 1 corresponds to
             a `sentence B` token (see BERT paper for more details).
@@ -1190,6 +1159,10 @@ class ZenForNextSentencePrediction(ZenPreTrainedModel):
             0 => next sentence is the continuation, 1 => next sentence is a random sentence.
         `head_mask`: an optional torch.Tensor of shape [num_heads] or [num_layers, num_heads] with indices between 0 and 1.
             It's a mask to be used to nullify some heads of the transformer. 1.0 => head is fully masked, 0.0 => head is not masked.
+        `input_ngram_ids`: input_ids of ngrams.
+        `ngram_token_type_ids`: token_type_ids of ngrams.
+        `ngram_attention_mask`: attention_mask of ngrams.
+        `ngram_position_matrix`: position matrix of ngrams.
 
     Outputs:
         if `next_sentence_label` is not `None`:
@@ -1198,19 +1171,6 @@ class ZenForNextSentencePrediction(ZenPreTrainedModel):
         if `next_sentence_label` is `None`:
             Outputs the next sentence classification logits of shape [batch_size, 2].
 
-    Example usage:
-    ```python
-    # Already been converted into WordPiece token ids
-    input_ids = torch.LongTensor([[31, 51, 99], [15, 5, 0]])
-    input_mask = torch.LongTensor([[1, 1, 1], [1, 1, 0]])
-    token_type_ids = torch.LongTensor([[0, 0, 1], [0, 1, 0]])
-
-    config = BertConfig(vocab_size_or_config_json_file=32000, hidden_size=768,
-        num_hidden_layers=12, num_attention_heads=12, intermediate_size=3072)
-
-    model = BertForNextSentencePrediction(config)
-    seq_relationship_logits = model(input_ids, token_type_ids, input_mask)
-    ```
     """
 
     def __init__(self, config, output_attentions=False, keep_multihead_output=False):
@@ -1241,8 +1201,8 @@ class ZenForNextSentencePrediction(ZenPreTrainedModel):
 
 
 class ZenForSequenceClassification(ZenPreTrainedModel):
-    """BERT model for classification.
-    This module is composed of the BERT model with a linear layer on top of
+    """ZEN model for classification.
+    This module is composed of the ZEN model with a linear layer on top of
     the pooled output.
 
     Params:
@@ -1267,6 +1227,10 @@ class ZenForSequenceClassification(ZenPreTrainedModel):
             with indices selected in [0, ..., num_labels].
         `head_mask`: an optional torch.Tensor of shape [num_heads] or [num_layers, num_heads] with indices between 0 and 1.
             It's a mask to be used to nullify some heads of the transformer. 1.0 => head is fully masked, 0.0 => head is not masked.
+        `input_ngram_ids`: input_ids of ngrams.
+        `ngram_token_type_ids`: token_type_ids of ngrams.
+        `ngram_attention_mask`: attention_mask of ngrams.
+        `ngram_position_matrix`: position matrix of ngrams.
 
     Outputs:
         if `labels` is not `None`:
@@ -1274,21 +1238,6 @@ class ZenForSequenceClassification(ZenPreTrainedModel):
         if `labels` is `None`:
             Outputs the classification logits of shape [batch_size, num_labels].
 
-    Example usage:
-    ```python
-    # Already been converted into WordPiece token ids
-    input_ids = torch.LongTensor([[31, 51, 99], [15, 5, 0]])
-    input_mask = torch.LongTensor([[1, 1, 1], [1, 1, 0]])
-    token_type_ids = torch.LongTensor([[0, 0, 1], [0, 1, 0]])
-
-    config = BertConfig(vocab_size_or_config_json_file=32000, hidden_size=768,
-        num_hidden_layers=12, num_attention_heads=12, intermediate_size=3072)
-
-    num_labels = 2
-
-    model = BertForSequenceClassification(config, num_labels)
-    logits = model(input_ids, token_type_ids, input_mask)
-    ```
     """
 
     def __init__(self, config, num_labels=2, output_attentions=False, keep_multihead_output=False):
@@ -1320,95 +1269,9 @@ class ZenForSequenceClassification(ZenPreTrainedModel):
             return all_attentions, logits
         return logits
 
-
-class ZenForMultipleChoice(ZenPreTrainedModel):
-    """BERT model for multiple choice tasks.
-    This module is composed of the BERT model with a linear layer on top of
-    the pooled output.
-
-    Params:
-        `config`: a BertConfig class instance with the configuration to build a new model
-        `output_attentions`: If True, also output attentions weights computed by the model at each layer. Default: False
-        `keep_multihead_output`: If True, saves output of the multi-head attention module with its gradient.
-            This can be used to compute head importance metrics. Default: False
-        `num_choices`: the number of classes for the classifier. Default = 2.
-
-    Inputs:
-        `input_ids`: a torch.LongTensor of shape [batch_size, num_choices, sequence_length]
-            with the word token indices in the vocabulary(see the tokens preprocessing logic in the scripts
-            `extract_features.py`, `run_classifier.py` and `run_squad.py`)
-        `token_type_ids`: an optional torch.LongTensor of shape [batch_size, num_choices, sequence_length]
-            with the token types indices selected in [0, 1]. Type 0 corresponds to a `sentence A`
-            and type 1 corresponds to a `sentence B` token (see BERT paper for more details).
-        `attention_mask`: an optional torch.LongTensor of shape [batch_size, num_choices, sequence_length] with indices
-            selected in [0, 1]. It's a mask to be used if the input sequence length is smaller than the max
-            input sequence length in the current batch. It's the mask that we typically use for attention when
-            a batch has varying length sentences.
-        `labels`: labels for the classification output: torch.LongTensor of shape [batch_size]
-            with indices selected in [0, ..., num_choices].
-        `head_mask`: an optional torch.Tensor of shape [num_heads] or [num_layers, num_heads] with indices between 0 and 1.
-            It's a mask to be used to nullify some heads of the transformer. 1.0 => head is fully masked, 0.0 => head is not masked.
-
-    Outputs:
-        if `labels` is not `None`:
-            Outputs the CrossEntropy classification loss of the output with the labels.
-        if `labels` is `None`:
-            Outputs the classification logits of shape [batch_size, num_labels].
-
-    Example usage:
-    ```python
-    # Already been converted into WordPiece token ids
-    input_ids = torch.LongTensor([[[31, 51, 99], [15, 5, 0]], [[12, 16, 42], [14, 28, 57]]])
-    input_mask = torch.LongTensor([[[1, 1, 1], [1, 1, 0]],[[1,1,0], [1, 0, 0]]])
-    token_type_ids = torch.LongTensor([[[0, 0, 1], [0, 1, 0]],[[0, 1, 1], [0, 0, 1]]])
-    config = BertConfig(vocab_size_or_config_json_file=32000, hidden_size=768,
-        num_hidden_layers=12, num_attention_heads=12, intermediate_size=3072)
-
-    num_choices = 2
-
-    model = BertForMultipleChoice(config, num_choices)
-    logits = model(input_ids, token_type_ids, input_mask)
-    ```
-    """
-
-    def __init__(self, config, num_choices=2, output_attentions=False, keep_multihead_output=False):
-        super(ZenForMultipleChoice, self).__init__(config)
-        self.output_attentions = output_attentions
-        self.num_choices = num_choices
-        self.bert = ZenModel(config, output_attentions=output_attentions,
-                              keep_multihead_output=keep_multihead_output)
-        self.dropout = nn.Dropout(config.hidden_dropout_prob)
-        self.classifier = nn.Linear(config.hidden_size, 1)
-        self.apply(self.init_bert_weights)
-
-    def forward(self, input_ids, input_ngram_ids, ngram_position_matrix, token_type_ids=None, attention_mask=None,
-                labels=None, head_mask=None):
-        flat_input_ids = input_ids.view(-1, input_ids.size(-1))
-        flat_input_ngram_ids = input_ngram_ids.view(-1, input_ngram_ids.size(-1))
-        flat_token_type_ids = token_type_ids.view(-1, token_type_ids.size(-1)) if token_type_ids is not None else None
-        flat_attention_mask = attention_mask.view(-1, attention_mask.size(-1)) if attention_mask is not None else None
-        outputs = self.bert(flat_input_ids, flat_input_ngram_ids, ngram_position_matrix, flat_token_type_ids, flat_attention_mask, output_all_encoded_layers=False,
-                            head_mask=head_mask)
-        if self.output_attentions:
-            all_attentions, _, pooled_output = outputs
-        else:
-            _, pooled_output = outputs
-        pooled_output = self.dropout(pooled_output)
-        logits = self.classifier(pooled_output)
-        reshaped_logits = logits.view(-1, self.num_choices)
-
-        if labels is not None:
-            loss_fct = CrossEntropyLoss()
-            loss = loss_fct(reshaped_logits, labels)
-            return loss
-        elif self.output_attentions:
-            return all_attentions, reshaped_logits
-        return reshaped_logits
-
-
 class ZenForTokenClassification(ZenPreTrainedModel):
-    """BERT model for token-level classification.
-    This module is composed of the BERT model with a linear layer on top of
+    """ZEN model for token-level classification.
+    This module is composed of the ZEN model with a linear layer on top of
     the full hidden state of the last layer.
 
     Params:
@@ -1420,8 +1283,7 @@ class ZenForTokenClassification(ZenPreTrainedModel):
 
     Inputs:
         `input_ids`: a torch.LongTensor of shape [batch_size, sequence_length]
-            with the word token indices in the vocabulary(see the tokens preprocessing logic in the scripts
-            `extract_features.py`, `run_classifier.py` and `run_squad.py`)
+            with the word token indices in the vocabulary
         `token_type_ids`: an optional torch.LongTensor of shape [batch_size, sequence_length] with the token
             types indices selected in [0, 1]. Type 0 corresponds to a `sentence A` and type 1 corresponds to
             a `sentence B` token (see BERT paper for more details).
@@ -1433,6 +1295,10 @@ class ZenForTokenClassification(ZenPreTrainedModel):
             with indices selected in [0, ..., num_labels].
         `head_mask`: an optional torch.Tensor of shape [num_heads] or [num_layers, num_heads] with indices between 0 and 1.
             It's a mask to be used to nullify some heads of the transformer. 1.0 => head is fully masked, 0.0 => head is not masked.
+        `input_ngram_ids`: input_ids of ngrams.
+        `ngram_token_type_ids`: token_type_ids of ngrams.
+        `ngram_attention_mask`: attention_mask of ngrams.
+        `ngram_position_matrix`: position matrix of ngrams.
 
     Outputs:
         if `labels` is not `None`:
@@ -1440,21 +1306,6 @@ class ZenForTokenClassification(ZenPreTrainedModel):
         if `labels` is `None`:
             Outputs the classification logits of shape [batch_size, sequence_length, num_labels].
 
-    Example usage:
-    ```python
-    # Already been converted into WordPiece token ids
-    input_ids = torch.LongTensor([[31, 51, 99], [15, 5, 0]])
-    input_mask = torch.LongTensor([[1, 1, 1], [1, 1, 0]])
-    token_type_ids = torch.LongTensor([[0, 0, 1], [0, 1, 0]])
-
-    config = BertConfig(vocab_size_or_config_json_file=32000, hidden_size=768,
-        num_hidden_layers=12, num_attention_heads=12, intermediate_size=3072)
-
-    num_labels = 2
-
-    model = BertForTokenClassification(config, num_labels)
-    logits = model(input_ids, token_type_ids, input_mask)
-    ```
     """
 
     def __init__(self, config, num_labels=2, output_attentions=False, keep_multihead_output=False):
@@ -1469,7 +1320,6 @@ class ZenForTokenClassification(ZenPreTrainedModel):
 
     def forward(self, input_ids, token_type_ids=None, attention_mask=None, labels=None, valid_ids=None,
                 attention_mask_label=None, ngram_ids=None, ngram_positions=None, head_mask=None):
-        # sequence_output, _ = self.bert(input_ids, token_type_ids, attention_mask, output_all_encoded_layers=False)
         outputs = self.bert(input_ids, ngram_ids, ngram_positions, token_type_ids, attention_mask,
                             output_all_encoded_layers=False, head_mask=head_mask)
         if self.output_attentions:
@@ -1505,99 +1355,3 @@ class ZenForTokenClassification(ZenPreTrainedModel):
             return loss
         else:
             return logits
-
-
-class ZenForQuestionAnswering(ZenPreTrainedModel):
-    """BERT model for Question Answering (span extraction).
-    This module is composed of the BERT model with a linear layer on top of
-    the sequence output that computes start_logits and end_logits
-
-    Params:
-        `config`: a BertConfig class instance with the configuration to build a new model
-        `output_attentions`: If True, also output attentions weights computed by the model at each layer. Default: False
-        `keep_multihead_output`: If True, saves output of the multi-head attention module with its gradient.
-            This can be used to compute head importance metrics. Default: False
-
-    Inputs:
-        `input_ids`: a torch.LongTensor of shape [batch_size, sequence_length]
-            with the word token indices in the vocabulary(see the tokens preprocessing logic in the scripts
-            `extract_features.py`, `run_classifier.py` and `run_squad.py`)
-        `token_type_ids`: an optional torch.LongTensor of shape [batch_size, sequence_length] with the token
-            types indices selected in [0, 1]. Type 0 corresponds to a `sentence A` and type 1 corresponds to
-            a `sentence B` token (see BERT paper for more details).
-        `attention_mask`: an optional torch.LongTensor of shape [batch_size, sequence_length] with indices
-            selected in [0, 1]. It's a mask to be used if the input sequence length is smaller than the max
-            input sequence length in the current batch. It's the mask that we typically use for attention when
-            a batch has varying length sentences.
-        `start_positions`: position of the first token for the labeled span: torch.LongTensor of shape [batch_size].
-            Positions are clamped to the length of the sequence and position outside of the sequence are not taken
-            into account for computing the loss.
-        `end_positions`: position of the last token for the labeled span: torch.LongTensor of shape [batch_size].
-            Positions are clamped to the length of the sequence and position outside of the sequence are not taken
-            into account for computing the loss.
-        `head_mask`: an optional torch.Tensor of shape [num_heads] or [num_layers, num_heads] with indices between 0 and 1.
-            It's a mask to be used to nullify some heads of the transformer. 1.0 => head is fully masked, 0.0 => head is not masked.
-
-    Outputs:
-        if `start_positions` and `end_positions` are not `None`:
-            Outputs the total_loss which is the sum of the CrossEntropy loss for the start and end token positions.
-        if `start_positions` or `end_positions` is `None`:
-            Outputs a tuple of start_logits, end_logits which are the logits respectively for the start and end
-            position tokens of shape [batch_size, sequence_length].
-
-    Example usage:
-    ```python
-    # Already been converted into WordPiece token ids
-    input_ids = torch.LongTensor([[31, 51, 99], [15, 5, 0]])
-    input_mask = torch.LongTensor([[1, 1, 1], [1, 1, 0]])
-    token_type_ids = torch.LongTensor([[0, 0, 1], [0, 1, 0]])
-
-    config = BertConfig(vocab_size_or_config_json_file=32000, hidden_size=768,
-        num_hidden_layers=12, num_attention_heads=12, intermediate_size=3072)
-
-    model = BertForQuestionAnswering(config)
-    start_logits, end_logits = model(input_ids, token_type_ids, input_mask)
-    ```
-    """
-
-    def __init__(self, config, output_attentions=False, keep_multihead_output=False):
-        super(ZenForQuestionAnswering, self).__init__(config)
-        self.output_attentions = output_attentions
-        self.bert = ZenModel(config, output_attentions=output_attentions,
-                              keep_multihead_output=keep_multihead_output)
-        self.qa_outputs = nn.Linear(config.hidden_size, 2)
-        self.apply(self.init_bert_weights)
-
-    def forward(self, input_ids, input_ngram_ids, ngram_position_matrix, token_type_ids=None, attention_mask=None, start_positions=None,
-                end_positions=None, head_mask=None):
-        outputs = self.bert(input_ids, input_ngram_ids, ngram_position_matrix, token_type_ids, attention_mask,
-                            output_all_encoded_layers=False,
-                            head_mask=head_mask)
-        if self.output_attentions:
-            all_attentions, sequence_output, _ = outputs
-        else:
-            sequence_output, _ = outputs
-        logits = self.qa_outputs(sequence_output)
-        start_logits, end_logits = logits.split(1, dim=-1)
-        start_logits = start_logits.squeeze(-1)
-        end_logits = end_logits.squeeze(-1)
-
-        if start_positions is not None and end_positions is not None:
-            # If we are on multi-GPU, split add a dimension
-            if len(start_positions.size()) > 1:
-                start_positions = start_positions.squeeze(-1)
-            if len(end_positions.size()) > 1:
-                end_positions = end_positions.squeeze(-1)
-            # sometimes the start/end positions are outside our model inputs, we ignore these terms
-            ignored_index = start_logits.size(1)
-            start_positions.clamp_(0, ignored_index)
-            end_positions.clamp_(0, ignored_index)
-
-            loss_fct = CrossEntropyLoss(ignore_index=ignored_index)
-            start_loss = loss_fct(start_logits, start_positions)
-            end_loss = loss_fct(end_logits, end_positions)
-            total_loss = (start_loss + end_loss) / 2
-            return total_loss
-        elif self.output_attentions:
-            return all_attentions, start_logits, end_logits
-        return start_logits, end_logits
