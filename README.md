@@ -1,6 +1,6 @@
 # ZEN
 
-ZEN is a BERT-based Chinese **(Z)** text encoder **E**nhanced by **N**-gram representations, where different combinations of characters are considered during training. The potential word or phrase boundaries are explicitly pre-trained and fine-tuned with the character encoder (BERT). ZEN incorporates the comprehensive information of both the character sequence and words or phrases it contains. ZEN is tested on a series of Chinese NLP tasks, where it requires less resource than other published encoders, and achieves state-of-the-art performance on most tasks.
+ZEN is a BERT-based Chinese **(Z)** text encoder **E**nhanced by **N**-gram representations, where different combinations of characters are considered during training. The potential word or phrase boundaries are explicitly pre-trained and fine-tuned with the character encoder (BERT). ZEN incorporates the comprehensive information of both the character sequence and words or phrases it contains. The structure of ZEN is illustrated in the figure below.
 
 　
 
