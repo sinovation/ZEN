@@ -322,18 +322,17 @@ def main():
                         level = logging.INFO if args.local_rank in [-1, 0] else logging.WARN)
 
     if args.local_rank == -1 or args.no_cuda:
-        device = torch.device("cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu")
-        n_gpu = torch.cuda.device_count()
+        args.device = torch.device("cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu")
+        args.n_gpu = torch.cuda.device_count()
     else:
         torch.cuda.set_device(args.local_rank)
-        device = torch.device("cuda", args.local_rank)
-        n_gpu = 1
+        args.device = torch.device("cuda", args.local_rank)
+        args.n_gpu = 1
         # Initializes the distributed backend which will take care of sychronizing nodes/GPUs
         torch.distributed.init_process_group(backend='nccl')
-    args.device = device
 
     logger.info("device: {} n_gpu: {}, distributed training: {}, 16-bits training: {}".format(
-        device, n_gpu, bool(args.local_rank != -1), args.fp16))
+        args.device, args.n_gpu, bool(args.local_rank != -1), args.fp16))
 
     if args.gradient_accumulation_steps < 1:
         raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(
@@ -344,7 +343,7 @@ def main():
     random.seed(args.seed)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
-    if n_gpu > 0:
+    if args.n_gpu > 0:
         torch.cuda.manual_seed_all(args.seed)
 
     if not args.do_train and not args.do_eval:
@@ -375,13 +374,13 @@ def main():
 
     if args.fp16:
         model.half()
-    model.to(device)
+    model.to(args.device)
     if args.local_rank != -1:
         model = torch.nn.parallel.DistributedDataParallel(model,
                                                           device_ids=[args.local_rank],
                                                           output_device=args.local_rank,
                                                           find_unused_parameters=True)
-    elif n_gpu > 1:
+    elif args.n_gpu > 1:
         model = torch.nn.DataParallel(model)
 
     if args.do_train:
