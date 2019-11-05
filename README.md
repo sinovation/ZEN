@@ -7,6 +7,19 @@ ZEN is a BERT-based Chinese **(Z)** text encoder **E**nhanced by **N**-gram 
 ![ZEN_model](http://zen.chuangxin.com/front/assets/zen.png)
 
 　
+## Citation
+
+If you use or extend our work, please cite the following paper:
+```
+@article{Sinovation2019ZEN,
+  title="{ZEN: Pre-training Chinese Text Encoder Enhanced by N-gram Representations}",
+  author={Shizhe Diao, Jiaxin Bai, Yan Song, Tong Zhang, Yonggang Wang},
+  journal={ArXiv},
+  year={2019},
+  volume={abs/1911.00720}
+}
+```
+
 
 ## Quick tour of pre-training and fine-tune using ZEN
 
