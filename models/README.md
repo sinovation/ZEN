@@ -1,6 +1,6 @@
 ## Pre-trained and fine-tuned models
 
-| Section | BaiduNetDisk download links | Description |
+| Section | BaiduNetDisk | Description |
 |-|-|-|
 |[ZEN_pretrain_base](http://zen.chuangxin.com/ZEN/models/ZEN_pretrain_base_v0.1.0.zip)| [download](https://pan.baidu.com/s/1E2ylFnzGSkwBc8tY_OqZYg)| pre-trained model|
 |[ZEN_ft_CWS](http://zen.chuangxin.com/ZEN/models/ZEN_ft_CWS_v0.1.0.zip)| [download](https://pan.baidu.com/s/1lLnVHMVRYCcvMPDc_x5_mQ)| fine-tuned model for CWS |
