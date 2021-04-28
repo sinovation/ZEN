@@ -37,5 +37,5 @@ The library comprises several example scripts for conducting [**Chinese NLP task
 
 For help or issues using ZEN, please submit a GitHub issue.
 
-For personal communication related to ZEN, please contact chenguimin(`chenguimin@chuangxin.com`).
+For personal communication related to ZEN, please contact Guimin Chen (`chenguimin@chuangxin.com`).
 
