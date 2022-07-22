@@ -4,7 +4,7 @@ ZEN is a BERT-based Chinese **(Z)** text encoder **E**nhanced by **N**-gram 
 
 　
 
-![ZEN_model](http://zen.chuangxin.com/front/assets/zen.png)
+![ZEN_model](docs/figures/zen.png)
 
 　
 ## Citation
@@ -37,5 +37,5 @@ The library comprises several example scripts for conducting [**Chinese NLP task
 
 For help or issues using ZEN, please submit a GitHub issue.
 
-For personal communication related to ZEN, please contact Guimin Chen (`chenguimin@chuangxin.com`).
+For personal communication related to ZEN, please contact Yuanhe Tian (`yhtian94@gmail.com`).
 
