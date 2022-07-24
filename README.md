@@ -9,14 +9,16 @@ ZEN is a BERT-based Chinese **(Z)** text encoder **E**nhanced by **N**-gram 
 　
 ## Citation
 
-If you use or extend our work, please cite the following [**paper**](https://arxiv.org/abs/1911.00720):
+If you use or extend our work, please cite the following [**paper**](https://aclanthology.org/2020.findings-emnlp.425) published in EMNLP-2020:
 ```
-@article{Sinovation2019ZEN,
-  title="{ZEN: Pre-training Chinese Text Encoder Enhanced by N-gram Representations}",
-  author={Shizhe Diao, Jiaxin Bai, Yan Song, Tong Zhang, Yonggang Wang},
-  journal={ArXiv},
-  year={2019},
-  volume={abs/1911.00720}
+@inproceedings{diao-etal-2020-zen,
+    title = "ZEN: Pre-training Chinese Text Encoder Enhanced by N-gram Representations",
+    author = "Diao, Shizhe and Bai, Jiaxin and Song, Yan and Zhang, Tong and Wang, Yonggang",
+    booktitle = "Findings of the Association for Computational Linguistics: EMNLP 2020",
+    month = nov,
+    year = "2020",
+    address = "Online",
+    pages = "4729--4740",
 }
 ```
 
